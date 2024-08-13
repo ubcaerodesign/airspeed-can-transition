@@ -86,55 +86,89 @@
 //pressure sensor test 
 // Includes
 // Includes
-#include <Wire.h>
-#include <vector>
-#include <stdint.h>
-#include <time.h>
-#define SDA_pin PB7
-#define SCL_pin PB6
-#define ADDRESS (uint8_t) 0x46
+
+// #include <Wire.h> //I2C interface
+// #include <vector>
+// #include <stdint.h>
+
+// #define I2C_SDA PB7
+// #define I2C_SCL PB8      
+// #define BAUD_RATE 9600 //Serial print and debugging    
+
+// /*Differential Pressure Transducer: MS4525DO-DS3BK001DPL*/     
+// #define MS4525DO_ADDRESS (uint8_t) 0x46 //MS4525DO I2C address
+// #define MS4525DO_INT PB1                //MS4525DO I2C interrupt Blue Pill pin
+
+// #define p(msg) Serial.print(msg)
+// #define pl(msg) Serial.println(msg)
+
+// std::vector<uint8_t> fetch_data();
+// void setup() {
+// //i2c
+//   Wire.setSDA(I2C_SDA);
+//   Wire.setSCL(I2C_SCL);
+//   Wire.begin();
+// //Serial  
+//   Serial.begin(BAUD_RATE);
+// }
+
+// void loop() {
+//   std::vector<uint8_t>raw_data = fetch_data();
+//   for(uint8_t i:raw_data) {
+//     p(i);
+//     p(", ");
+//   }
+//   pl();
+// }
+
+// std::vector<uint8_t> fetch_data() {
+//   std::vector<uint8_t> raw_data = {0,0,0,0};
+//   int number_bytes = Wire.requestFrom(MS4525DO_ADDRESS, size_t(4), true);
+//   while(true) {
+//     int bytes_available = Wire.available(); 
+//     if (bytes_available == 0) {
+//       break;
+//     } 
+//     uint8_t data_byte = Wire.read();
+//     switch(bytes_available) {
+//       case 4:
+//         raw_data.at(0) = data_byte;
+//         break;
+//       case 3:
+//         raw_data.at(1) = data_byte;
+//         break;
+//       case 2:
+//         raw_data.at(2) = data_byte;
+//         break;
+//       case 1:    
+//         raw_data.at(3) = data_byte;
+//         break;
+//       case 0:
+//         break;    
+//       default: 
+//         break; 
+//     }
+//   }
+//   return raw_data;
+
+// }
+  
+#include "I2C_Interface.hpp"
 
 void setup() {
-//i2c
-  Wire.setSDA(SDA_pin);
-  Wire.setSCL(SCL_pin);
+  Wire.setSDA(I2C_SDA);
+  Wire.setSCL(I2C_SCL);
   Wire.begin();
-//Serial 
-  Serial.begin(9600);
+  Serial.begin(BAUD_RATE);
 }
-
 void loop() {
-  std::vector<uint8_t>raw_data = {0,0,0,0};     
-  //int number_bytes = Wire.requestFrom(ADDRESS, size_t(4), true);
-  int tim = micros();
-  while(true) {
-    int bytes_available = Wire.available(); 
-    //Serial.print("Bytes available: ");
-    // Serial.println(bytes_available);
-    if (bytes_available == 0) {
-      break;
-    } 
-    uint8_t data_byte = Wire.read();
-    switch(bytes_available) {
-      case 4:
-        raw_data.at(0) = data_byte;
-        break;
-      case 3:
-        raw_data.at(1) = data_byte;
-        break;
-      case 2:
-        raw_data.at(2) = data_byte;
-        break;
-      case 1:    
-        raw_data.at(3) = data_byte;
-        break;
-      case 0:
-        break;    
-      default: 
-        break; 
-    }
-    
+  I2C_Interface i2c(MS4525DO_ADDRESS);
+  i2c.read();
+  std::vector<uint8_t> data = i2c.get_raw_data();
+  for(uint8_t i:data) {
+    p(i);
+    p(", ");
   }
-  
+  pl();
 }
 
