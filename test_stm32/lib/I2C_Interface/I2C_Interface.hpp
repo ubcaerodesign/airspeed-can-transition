@@ -15,7 +15,8 @@
 
 #define p(msg) Serial.print(msg)
 #define pl(msg) Serial.println(msg)
-
+#define phex(msg) Serial.print(msg, HEX)
+#define pbin(msg) Serial.print(msg, BIN)
 class I2C_Interface {
     private:
         uint8_t address_device;
@@ -26,6 +27,6 @@ class I2C_Interface {
     std::vector<uint8_t> get_raw_data() const;
     void read();
 };  
-
+   
 
 #endif 

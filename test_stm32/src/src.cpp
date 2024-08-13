@@ -165,9 +165,12 @@ void loop() {
   I2C_Interface i2c(MS4525DO_ADDRESS);
   i2c.read();
   std::vector<uint8_t> data = i2c.get_raw_data();
-  for(uint8_t i:data) {
-    p(i);
-    p(", ");
+  for(int i =0; i++; i<4) {
+    // if(i==2) {
+    //   p(", ");
+    // }
+    // pbin(data.at(i));
+    p(data.at(i));
   }
   pl();
 }
