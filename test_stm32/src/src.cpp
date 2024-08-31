@@ -21,14 +21,19 @@ void loop() {
   MS4525DO_Sensor sensor(MS4525DO_ADDRESS);
   sensor.update_sensor_package();
   data_t sensor_package = sensor.fetch_sensor_package();
-  // print_converted(sensor_package);
+  // print_converted(sensor_package); //orange - a10 
   // pl();
-  // p(sensor_package.raw.pressure); p(", "); p(sensor_package.converted.pressure_psi);
+  // p(micros()); p(",");
+  p(sensor_package.raw.pressure); p(", "); p(sensor_package.converted.pressure_psi); p(", "); pl(sensor_package.converted.airspeed_ms);
+
   // p(", "); pl(sensor_package.converted.airspeed_ms);
 
-  p(sensor_package.raw.temperature); p(", "); pl(sensor_package.converted.temperature_C);
+  //p(sensor_package.raw.temperature); p(", "); pl(sensor_package.converted.temperature_C);
   
 
-
+//TODO: 
+  //namespaces for organization
+  //use Interrupt pin to avoid reading stale data
+  
 }
 

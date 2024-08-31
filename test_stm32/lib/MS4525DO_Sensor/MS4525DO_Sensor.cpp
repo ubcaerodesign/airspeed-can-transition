@@ -10,7 +10,7 @@ void MS4525DO_Sensor::update_sensor_package()
     std::vector<uint8_t> data = {0,0,0,0};
     i2c.read();
     data = i2c.get_raw_data();
-
+    
     /*Status - 2 Bits*/
     sensor_package.raw.status = (uint8_t) (data.at(0) >> 6); 
     /*Pressure - 14 Bits*/
