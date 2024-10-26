@@ -36,6 +36,7 @@ struct data_t {
         double temperature_C; /*range: []*/
         double airspeed_ms; 
     } converted;
+    
 };
 
 class MS4525DO_Sensor {

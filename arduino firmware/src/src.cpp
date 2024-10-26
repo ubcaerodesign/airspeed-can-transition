@@ -5,6 +5,7 @@ void setup() {
   Wire.setSCL(I2C_SCL);
   Wire.begin();
   Serial.begin(BAUD_RATE);
+  pinMode(PB5, OUTPUT);
 }
 void print_converted(data_t package) {
   p("Status: \t");      pl(package.converted.status);
@@ -18,13 +19,13 @@ void print_raw(data_t package) {
   p("Temperature: \t"); pl(package.raw.temperature);
 }
 void loop() {
-  MS4525DO_Sensor sensor(MS4525DO_ADDRESS);
-  sensor.update_sensor_package();
-  data_t sensor_package = sensor.fetch_sensor_package();
-  // print_converted(sensor_package); //orange - a10 
-  // pl();
-  // p(micros()); p(",");
-  p(sensor_package.raw.pressure); p(", "); p(sensor_package.converted.pressure_psi); p(", "); pl(sensor_package.converted.airspeed_ms);
+  // MS4525DO_Sensor sensor(MS4525DO_ADDRESS);
+  // sensor.update_sensor_package();
+  // data_t sensor_package = sensor.fetch_sensor_package();
+  // // print_converted(sensor_package); //orange - a10 
+  // // pl();
+  // // p(micros()); p(",");
+  // p(sensor_package.raw.pressure); p(", "); p(sensor_package.converted.pressure_psi); p(", "); pl(sensor_package.converted.airspeed_ms);
 
   // p(", "); pl(sensor_package.converted.airspeed_ms);
 
@@ -34,6 +35,9 @@ void loop() {
 //TODO: 
   //namespaces for organization
   //use Interrupt pin to avoid reading stale data
-  
+  digitalWrite(PB5, HIGH);
+  delay(5000);
+  digitalWrite(PB5, LOW);
+  delay(5000);
 }
 
