@@ -1,0 +1,30 @@
+/*
+ * MS4525DO.c
+ *
+ *  Created on: Oct 26, 2024
+ *      Author: chant
+ */
+#include "MS4525DO.h"
+
+void read_MS4525DO(){
+	//MS4525DO_t MS4525DO_data;
+	I2C_HandleTypeDef i2cHandle;
+	uint8_t data_buffer[4]; //data buffer to store raw I2C data
+	HAL_StatusTypeDef status = readI2CData(i2cHandle, ADDRESS_I2C_MS4525DO, data_buffer, 4, HAL_MAX_DELAY);
+
+}
+
+HAL_StatusTypeDef readI2CData(I2C_HandleTypeDef *hi2c, uint16_t deviceAddr, uint8_t *pData, uint16_t size) {
+    HAL_StatusTypeDef status;
+    status = HAL_I2C_Master_Receive(hi2c, deviceAddr, pData, size, HAL_MAX_DELAY);
+    if (status == HAL_OK) {
+        // Successfully read data
+    } else if (status == HAL_ERROR) {
+        // Handle error
+    } else if (status == HAL_BUSY) {
+        // Handle busy status
+    } else if (status == HAL_TIMEOUT) {
+        // Handle timeout
+    }
+    return status;
+}

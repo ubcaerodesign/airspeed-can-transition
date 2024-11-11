@@ -1,0 +1,4 @@
+../Core/Src/MS4525DO.c:12:5:_write	1
+../Core/Src/MS4525DO.c:25:6:MS4525DO_assignI2C	1
+../Core/Src/MS4525DO.c:28:6:read_MS4525DO	5
+../Core/Src/MS4525DO.c:68:6:I2C_ManualBusReset	2

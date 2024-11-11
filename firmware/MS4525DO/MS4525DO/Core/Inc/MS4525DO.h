@@ -26,9 +26,11 @@
 #define AIR_DENSITY			 	(double) 1.225 //kg/m^3
 //this is where to include the calibration macros if needed, to generalize wind tunnel calibration process
 
+#define VERBOSE_MODE_EN //uncomment to enable verbose debug mode
+
 /*STRUCTURES AND ENUMERATORS*/
-/*MS4525DO Sensor Package*/
-struct data_t {
+/*MS4525DO Data Package*/
+struct MS4525DO_t {
 	uint8_t status;
     struct raw_t {
         uint16_t pressure;
@@ -42,22 +44,18 @@ struct data_t {
     } processed;
 };
 /*Enumerate status codes returned by the MS4525DO*/
-enum Status {
+typedef enum {
 	normal,
 	reserved,
 	stale,
 	fault
-};
+} status_t;
 
-/*Updates the MS4525DO sensor data*/
-void update_MS4525DO_data();
+int _write(int file, char *data, int len); //An overload so printf() can be associated with serial print
 
-/*Fetches the current MS4525DO sensor data*/
-struct data_t fetch_MS4525DO_data();
-
-
-/*Lower Level Functions - I2C, CAN*/
-
+void MS4525DO_assignI2C(I2C_HandleTypeDef *hi2c_device);
+void read_MS4525DO();
+void I2C_ManualBusReset(void);
 
 
 #endif /* INC_MS4525DO_H_ */
