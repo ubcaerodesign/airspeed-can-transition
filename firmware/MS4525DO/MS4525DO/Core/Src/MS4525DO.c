@@ -14,7 +14,6 @@ int _write(int file, char *data, int len) {
     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
     return len;
 }
-
 /*
  * GLOBAL*/
 I2C_HandleTypeDef *MS4525DO_i2c_port;
@@ -22,12 +21,23 @@ I2C_HandleTypeDef *MS4525DO_i2c_port;
 /**
  * Configures which i2c port MS4525DO is on
  */
-void MS4525DO_assignI2C(I2C_HandleTypeDef *hi2c_device) {
-	MS4525DO_i2c_port = hi2c_device;
+void MS4525DO_Initialize(struct MS4525DO_t *pSensor, I2C_HandleTypeDef *hi2c) {
+	/*Set i2c handle*/
+	pSensor->i2c_handle = hi2c;
+	/*Initialize everything to defaults*/
+	pSensor->verified = 0;
+	SensorStatus initStatus = normal;
+	pSensor->sensor_status = initStatus;
+	pSensor->raw_data.pressure = 0;
+	pSensor->raw_data.temperature = 0;
+	pSensor->processed_data.pressure_psi = 0;
+	pSensor->processed_data.temperature_C = 0;
+	pSensor->processed_data.airspeed_mps = 0;
+	pSensor->processed_data.airspeed_calibrated_mps = 0;
 }
-void read_MS4525DO(){
+void read_MS4525DO(struct MS4525DO_t *pSensor) {
 	uint8_t data_buffer[4]; //data buffer to store raw I2C data
-	HAL_StatusTypeDef status=HAL_I2C_Master_Receive(MS4525DO_i2c_port, ADDRESS_I2C_MS4525DO << 1, data_buffer, sizeof(data_buffer), HAL_MAX_DELAY);
+	HAL_StatusTypeDef status = HAL_I2C_Master_Receive(pSensor->i2c_handle, ADDRESS_I2C_MS4525DO << 1, data_buffer, sizeof(data_buffer), HAL_MAX_DELAY);
 #ifdef VERBOSE_MODE_EN
     if (status == HAL_OK) {
         printf("HAL_OK\r\n");
@@ -38,8 +48,8 @@ void read_MS4525DO(){
     } else if (status == HAL_TIMEOUT) {
         printf("HAL_TIMEOUT\r\n");
     }
-
-    uint32_t error = HAL_I2C_GetError(MS4525DO_i2c_port);
+    //diagnose HAL error
+    uint32_t error = HAL_I2C_GetError(pSensor->i2c_handle);
     if (error == HAL_I2C_ERROR_NONE) {
       printf("no errors \r\n");
     } else if (error == HAL_I2C_ERROR_BERR) {
@@ -55,33 +65,16 @@ void read_MS4525DO(){
     } else if (error == HAL_I2C_ERROR_TIMEOUT) {
       printf("HAL_I2C_ERROR_TIMEOUT\r\n");
     }
+    //print the raw bytes
     printf("%u, ",data_buffer[0]);
     printf("%u, ",data_buffer[1]);
     printf("%u, ",data_buffer[2]);
     printf("%u \r\n",data_buffer[3]);
 #endif
+
+//    pData->sensor_status = 1;
+   pSensor->processed_data.airspeed_mps = 12;
+    printf("%f \r\n",pSensor->processed_data.airspeed_mps);
 }
 
-void I2C_ManualBusReset(void)
-{
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    // Configure SCL and SDA as GPIO outputs
-    GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7; // Assuming PB6 (SCL) and PB7 (SDA)
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    // Toggle SCL 10 times
-    for (int i = 0; i < 10; i++) {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
-        HAL_Delay(1);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-        HAL_Delay(1);
-    }
-
-    // Reinitialize I2C
-    MX_I2C1_Init();
-}
 
