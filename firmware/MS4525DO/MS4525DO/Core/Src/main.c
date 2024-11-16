@@ -99,32 +99,15 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   struct MS4525DO_t MS4525DO;
-  struct MS4525DO_t *pMS4525DO = &MS4525DO;
-  MS4525DO_Initialize(pMS4525DO, &hi2c1);
+  MS4525DO_Initialize(&MS4525DO, &hi2c1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  struct MS4525DO_t MS4525DO_data = {.data_is_good = 0, .sensor_status = 0,
-//	  .raw = {.pressure = 0, .temperature = 0},
-//	  .processed = {.pressure_psi = 0, .temperature_C = 0, .airspeed_ms = 0}}; //default all values to default
-//	  struct MS4525DO_t MS4525DO_d;
-//	  MS4525DO_data.data_is_good = 0;
-//	  MS4525DO_data.sensor_status = 0;
-//	  MS4525DO_data.raw.pressure = 0;
-//	  MS4525DO_data.raw.temperature = 0;
-//	  MS4525DO_data.processed.airspeed_ms = 0;
-//	  MS4525DO_data.processed.pressure_psi = 0;
-//	  MS4525DO_data.processed.temperature_C = 0;
-
 	  read_MS4525DO(&MS4525DO);
 
-//	  uint8_t s = pMS4525DO_data->sensor_status;
-//	  double a = pMS4525DO_data->processed.airspeed_ms;
-//	  printf("%u, \r\n", pMS4525DO_data->sensor_status);
-//	  printf("%d, \r\n", pMS4525DO_data->processed.airspeed_ms);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

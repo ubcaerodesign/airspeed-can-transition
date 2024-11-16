@@ -9,4 +9,7 @@
 	<section name="CResourceRenameRefactoringInputPage">
 		<item key="updateReferences" value="false"/>
 	</section>
+	<section name="OptionalMessageDialog.hide.">
+		<item key="askReindex.detail" value="0"/>
+	</section>
 </section>

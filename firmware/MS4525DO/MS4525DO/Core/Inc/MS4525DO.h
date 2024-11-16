@@ -14,18 +14,41 @@
 #include "stm32f1xx_hal.h" /* Needed for I2C */
 #include <math.h>
 #include <stdio.h>
-#include <stdbool.h> // Provides bool, true, and false
-
+#include <stdlib.h>
+//#include <stdbool.h> // Provides bool, true, and false
+#include <math.h>
 /*MS4525DO CONFIGURATION PARAMETERS*/
-#define TYPE_MS4525DO     		(bool)     0 /*1 - Type A, 0 - Type B*/
+#define TYPE_MS4525DO     		(uint8_t)  0 /*1 - Type A, 0 - Type B*/
 #define PMAX_PSI_MS4525DO 		(double)   1 //casted to double for transfer function
 #define PMIN_PSI_MS4525DO 		(double)   -1
 #define ADDRESS_I2C_MS4525DO 	(uint8_t) 0x46
 #define AIR_DENSITY			 	(double) 1.225 //kg/m^3
 
-#define VERBOSE_MODE_EN //uncomment to enable verbose debug mode
+//#define VERBOSE_MODE_EN //uncomment to enable verbose debug mode
 #define WIND_TUNNEL_EN //uncomment to enable wind tunnel calibration features (enabled during wind tunnel only)
 #define PRINTF_OVERLOAD //uncomment to have printf print to serial
+
+/*CALIBRATION PARAMETERS*/
+#define WINDTUNNEL_BETZ_200RPM (double) 0 		//ZERO REFERENCE
+#define WINDTUNNEL_BETZ_250RPM (double) 1.15
+#define WINDTUNNEL_BETZ_300RPM (double) 4.7
+#define WINDTUNNEL_BETZ_350RPM (double) 8.55
+#define WINDTUNNEL_BETZ_400RPM (double) 12
+#define WINDTUNNEL_BETZ_450RPM (double) 16.25
+#define WINDTUNNEL_BETZ_500RPM (double) 20.3
+#define WINDTUNNEL_BETZ_550RPM (double) 24.8
+
+#define RAW_PRESSURE_DEC_200RPM (uint16_t) 8223	//ZERO REFERENCE
+#define RAW_PRESSURE_DEC_250RPM (uint16_t) 8231
+#define RAW_PRESSURE_DEC_300RPM (uint16_t) 8262
+#define RAW_PRESSURE_DEC_350RPM (uint16_t) 8294
+#define RAW_PRESSURE_DEC_400RPM (uint16_t) 8333
+#define RAW_PRESSURE_DEC_450RPM (uint16_t) 8409
+#define RAW_PRESSURE_DEC_500RPM (uint16_t) 8419
+#define RAW_PRESSURE_DEC_550RPM (uint16_t) 8463
+
+/*linear interpolation macro*/
+#define LINEAR_INTERPOLATE(x,x1,x2,y1,y2) (double) (y1+(x-x1)*(y2-y1)/(x2-x1))
 
 /*Raw bytes*/
 struct raw_t {
@@ -39,26 +62,33 @@ struct processed_t {
 	double airspeed_mps; /*range: */
 	double airspeed_calibrated_mps;
 };
+/*data to be sent over via CAN*/
+struct CAN_payload_t {
+	uint8_t airspeed; 		//conversion?
+	uint8_t temperature;	//conversion?
+	//more flags to be added
+	uint8_t is_stale: 1;	//data freshness
+	uint8_t i2c_comms_error: 1;
+};
 /*I2C read status codes - see MS4525DO interface manual*/
 typedef enum {
 	normal,
 	reserved,
 	stale,
-	fault
+	fault,
+	unknown
 } SensorStatus;
 
 struct MS4525DO_t {
 	I2C_HandleTypeDef *i2c_handle;
-	bool verified;
 	SensorStatus sensor_status;
 	struct raw_t raw_data;
 	struct processed_t processed_data;
+	struct CAN_payload_t CAN_package;
 };
-#ifdef PRINTF_OVERLOAD
-int _write(int file, char *data, int len); //An overload so printf() can be associated with serial print
-#endif
 
 void MS4525DO_Initialize(struct MS4525DO_t *pSensor, I2C_HandleTypeDef *hi2c);
-void read_MS4525DO(struct MS4525DO_t *pData);
-
+void read_MS4525DO(struct MS4525DO_t *pSensor);
+double calibrate_airspeed(uint16_t raw_pressure, double uncalibrated_airspeed);
+double calibrate_airspeed_LUT(uint16_t raw_pressure);
 #endif /* INC_MS4525DO_H_ */
