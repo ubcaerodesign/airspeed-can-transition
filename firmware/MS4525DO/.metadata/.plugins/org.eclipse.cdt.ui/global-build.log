@@ -1,7 +1,6 @@
-15:08:20 **** Incremental Build of configuration Debug for project MS4525DO ****
+15:34:50 **** Incremental Build of configuration Debug for project MS4525DO ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/MS4525DO.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/MS4525DO.d" -MT"Core/Src/MS4525DO.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/MS4525DO.o"
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
 ../Core/Src/MS4525DO.c: In function 'read_MS4525DO':
 ../Core/Src/MS4525DO.c:40:27: warning: unused variable 'i2c_status' [-Wunused-variable]
    40 |         HAL_StatusTypeDef i2c_status = HAL_I2C_Master_Receive(pSensor->i2c_handle, ADDRESS_I2C_MS4525DO << 1, data_buffer, sizeof(data_buffer), HAL_MAX_DELAY);
@@ -12,15 +11,14 @@ Finished building target: MS4525DO.elf
 arm-none-eabi-size  MS4525DO.elf 
 arm-none-eabi-objdump -h -S MS4525DO.elf  > "MS4525DO.list"
    text	   data	    bss	    dec	    hex	filename
-  26504	    488	   2104	  29096	   71a8	MS4525DO.elf
+  26824	    488	   2104	  29416	   72e8	MS4525DO.elf
 Finished building: default.size.stdout
  
 Finished building: MS4525DO.list
  
-15:09:09 **** Incremental Build of configuration Release for project MS4525DO ****
+15:34:56 **** Incremental Build of configuration Release for project MS4525DO ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/MS4525DO.c" -mcpu=cortex-m3 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/MS4525DO.d" -MT"Core/Src/MS4525DO.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/MS4525DO.o"
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
 ../Core/Src/MS4525DO.c: In function 'read_MS4525DO':
 ../Core/Src/MS4525DO.c:40:27: warning: unused variable 'i2c_status' [-Wunused-variable]
    40 |         HAL_StatusTypeDef i2c_status = HAL_I2C_Master_Receive(pSensor->i2c_handle, ADDRESS_I2C_MS4525DO << 1, data_buffer, sizeof(data_buffer), HAL_MAX_DELAY);
@@ -31,8 +29,15 @@ Finished building target: MS4525DO.elf
 arm-none-eabi-size  MS4525DO.elf 
 arm-none-eabi-objdump -h -S MS4525DO.elf  > "MS4525DO.list"
    text	   data	    bss	    dec	    hex	filename
-  13512	    120	   2104	  15736	   3d78	MS4525DO.elf
+  13688	    120	   2104	  15912	   3e28	MS4525DO.elf
 Finished building: default.size.stdout
  
 Finished building: MS4525DO.list
+ 
+15:36:03 **** Incremental Build of configuration Release for project MS4525DO ****
+make -j8 all 
+arm-none-eabi-size  MS4525DO.elf 
+   text	   data	    bss	    dec	    hex	filename
+  13688	    120	   2104	  15912	   3e28	MS4525DO.elf
+Finished building: default.size.stdout
  

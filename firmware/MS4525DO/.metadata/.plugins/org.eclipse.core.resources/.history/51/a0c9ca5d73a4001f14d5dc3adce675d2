@@ -144,7 +144,9 @@ double calibrate_airspeed(uint16_t raw_pressure, double uncalibrated_airspeed) {
 			calibrated_airspeed = LINEAR_INTERPOLATE(raw_pressure, RAW_PRESSURE_DEC_400RPM, RAW_PRESSURE_DEC_450RPM, WINDTUNNEL_BETZ_400RPM, WINDTUNNEL_BETZ_450RPM);
 		} else if((raw_pressure > RAW_PRESSURE_DEC_450RPM) && (raw_pressure < RAW_PRESSURE_DEC_500RPM)) {
 			calibrated_airspeed = LINEAR_INTERPOLATE(raw_pressure, RAW_PRESSURE_DEC_450RPM, RAW_PRESSURE_DEC_500RPM, WINDTUNNEL_BETZ_450RPM, WINDTUNNEL_BETZ_500RPM);
-		} else if ((raw_pressure > RAW_PRESSURE_DEC_500RPM) && (raw_pressure < RAW_PRESSURE_DEC_550RPM)) {
+		}
+
+		else if ((raw_pressure > RAW_PRESSURE_DEC_500RPM) && (raw_pressure < RAW_PRESSURE_DEC_550RPM)) {
 			calibrated_airspeed = LINEAR_INTERPOLATE(raw_pressure, RAW_PRESSURE_DEC_500RPM, RAW_PRESSURE_DEC_550RPM, WINDTUNNEL_BETZ_500RPM, WINDTUNNEL_BETZ_550RPM);
 		} else {
 			/*look up table if raw pressure falls exactly on calibration point*/
