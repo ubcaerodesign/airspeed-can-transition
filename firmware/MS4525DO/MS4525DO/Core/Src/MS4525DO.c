@@ -123,6 +123,26 @@ void read_MS4525DO(struct MS4525DO_t *pSensor) {
     printf(", %f", pSensor->processed_data.airspeed_mps);
     printf(", %f \r\n", pSensor->processed_data.airspeed_calibrated_mps);
 #endif
+
+    /*Populate CAN package*/
+    uint16_t airspeed_tx = (uint8_t)(pSensor->processed_data.airspeed_calibrated_mps*10); //multiply by 10 to preserve 1 decimal place
+    uint16_t temperature_tx = (uint8_t)(pSensor->processed_data.temperature_C*10);		 //multiply by 10 to preserve 1 decimal place
+    pSensor->CAN_package.airspeed = airspeed_tx;
+    pSensor->CAN_package.temperature = temperature_tx;
+    if(pSensor->sensor_status == stale) {
+    	pSensor->CAN_package.is_stale = 1;
+    } else {
+    	pSensor->CAN_package.is_stale = 0;
+    }
+    if((pSensor->sensor_status == reserved) || (pSensor->sensor_status == fault) || (pSensor->sensor_status == unknown)) {
+    	pSensor->CAN_package.i2c_comms_error = 1;
+    } else {
+    	pSensor->CAN_package.i2c_comms_error = 0;
+    }
+    printf("Airspeed: %u \r\n", pSensor->CAN_package.airspeed);
+    printf("Temp: %u \r\n", pSensor->CAN_package.temperature);
+    printf("Is Stale: %u \r\n", pSensor->CAN_package.is_stale);
+    printf("Comms Err: %u \r\n", pSensor->CAN_package.i2c_comms_error);
 }
 
 double calibrate_airspeed(uint16_t raw_pressure, double uncalibrated_airspeed) {

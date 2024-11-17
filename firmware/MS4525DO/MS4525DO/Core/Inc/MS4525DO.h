@@ -25,11 +25,12 @@
 #define AIR_DENSITY			 	(double) 1.225 //kg/m^3
 
 //#define VERBOSE_MODE_EN //uncomment to enable verbose debug mode
-#define WIND_TUNNEL_EN //uncomment to enable wind tunnel calibration features (enabled during wind tunnel only)
+//#define WIND_TUNNEL_EN //uncomment to enable wind tunnel calibration features (enabled during wind tunnel only)
 #define PRINTF_OVERLOAD //uncomment to have printf print to serial
 
 /*CALIBRATION PARAMETERS*/
-#define WINDTUNNEL_BETZ_200RPM (double) 0 		//ZERO REFERENCE
+//record betz reading in wind tunnel and raw pressure counts (decimal) from 200RPM to 550RPM in 50 RPM increments
+#define WINDTUNNEL_BETZ_200RPM (double) 0
 #define WINDTUNNEL_BETZ_250RPM (double) 1.15
 #define WINDTUNNEL_BETZ_300RPM (double) 4.7
 #define WINDTUNNEL_BETZ_350RPM (double) 8.55
@@ -38,7 +39,7 @@
 #define WINDTUNNEL_BETZ_500RPM (double) 20.3
 #define WINDTUNNEL_BETZ_550RPM (double) 24.8
 
-#define RAW_PRESSURE_DEC_200RPM (uint16_t) 8223	//ZERO REFERENCE
+#define RAW_PRESSURE_DEC_200RPM (uint16_t) 8223
 #define RAW_PRESSURE_DEC_250RPM (uint16_t) 8231
 #define RAW_PRESSURE_DEC_300RPM (uint16_t) 8262
 #define RAW_PRESSURE_DEC_350RPM (uint16_t) 8294
@@ -64,8 +65,8 @@ struct processed_t {
 };
 /*data to be sent over via CAN*/
 struct CAN_payload_t {
-	uint8_t airspeed; 		//conversion?
-	uint8_t temperature;	//conversion?
+	uint16_t airspeed; 		//conversion?
+	uint16_t temperature;	//conversion?
 	//more flags to be added
 	uint8_t is_stale: 1;	//data freshness
 	uint8_t i2c_comms_error: 1;
